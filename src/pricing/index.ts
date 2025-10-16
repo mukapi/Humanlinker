@@ -1,6 +1,7 @@
 /**
  * Main entry point for the Humanlinker pricing system
  * Manages Pro plans with dynamic pricing, user counts, billing periods, and currency conversion
+ * Updated: October 16, 2025
  */
 
 import { BillingPeriodManager } from './billing-period';
