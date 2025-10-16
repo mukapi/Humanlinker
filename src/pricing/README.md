@@ -58,7 +58,7 @@ src/pricing/
 ### 1. Inclure le script
 
 ```html
-<script defer src="https://arthurvu.github.io/Humanlinker/pricing/index.js"></script>
+<script defer src="https://mukapi.github.io/Humanlinker/pricing/index.js"></script>
 ```
 
 ### 2. Structure HTML requise
@@ -189,7 +189,7 @@ pnpm build
 
 # Deploy (automatic via GitHub Actions)
 git push origin master
-# → https://arthurvu.github.io/Humanlinker/pricing/index.js
+# → https://mukapi.github.io/Humanlinker/pricing/index.js
 ```
 
 ## 🎯 Logique Business
@@ -290,7 +290,7 @@ window.HumanlinkerPricing.refresh();
 ### Après (1 seul script)
 
 ```html
-<script defer src="https://arthurvu.github.io/Humanlinker/pricing/index.js"></script>
+<script defer src="https://mukapi.github.io/Humanlinker/pricing/index.js"></script>
 ```
 
 Tout est fusionné, typé, et optimisé ! 🎉

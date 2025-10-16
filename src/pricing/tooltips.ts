@@ -22,22 +22,49 @@ export class TooltipManager {
   private initialized = false;
 
   constructor() {
-    this.init();
+    // Wait for external libraries to load
+    this.waitForLibraries();
+  }
+
+  /**
+   * Wait for Tippy and Lottie to be loaded
+   */
+  private waitForLibraries(): void {
+    const checkInterval = setInterval(() => {
+      if (typeof window.tippy !== 'undefined' && typeof window.lottie !== 'undefined') {
+        clearInterval(checkInterval);
+        this.init();
+      }
+    }, 100);
+
+    // Timeout after 10 seconds
+    setTimeout(() => {
+      clearInterval(checkInterval);
+      if (!this.initialized) {
+        console.warn('Tippy.js or Lottie not loaded after 10 seconds.');
+      }
+    }, 10000);
   }
 
   /**
    * Initialize tooltips
    */
   private init(): void {
-    // Check if tippy is available
+    // Double check libraries are available
     if (typeof window.tippy === 'undefined') {
       console.warn('Tippy.js not loaded. Tooltips will not work.');
       return;
     }
 
+    if (typeof window.lottie === 'undefined') {
+      console.warn('Lottie not loaded. Lottie tooltips will not work.');
+    }
+
     this.initTextTooltips();
     this.initLottieTooltips();
     this.initialized = true;
+
+    console.log('✅ Tooltips initialized');
   }
 
   /**
