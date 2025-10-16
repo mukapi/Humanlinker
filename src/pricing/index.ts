@@ -96,8 +96,11 @@ class PricingSystem {
     // Billing period changes
     this.billingPeriodManager?.onChange((period) => {
       this.state.billingPeriod = period;
-      this.sliderController?.reinit(); // Reinit slider observers for new tab
-      this.updateDisplay();
+      // Wait for tab transition to complete before reinitializing slider
+      setTimeout(() => {
+        this.sliderController?.reinit();
+        this.updateDisplay();
+      }, 200);
     });
 
     // User count changes

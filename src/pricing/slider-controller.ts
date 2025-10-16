@@ -27,11 +27,22 @@ export class SliderController {
     // Clean up existing observers
     this.cleanup();
 
+    // Increased timeout to ensure tab transition is complete
     setTimeout(() => {
       const activeTabPane = this.getActiveTabPane();
-      if (!activeTabPane) return;
+      if (!activeTabPane) {
+        // Retry if not found (tab might still be transitioning)
+        setTimeout(() => this.observeActiveSlider(), 100);
+        return;
+      }
 
       const sliderHandles = activeTabPane.querySelectorAll<HTMLElement>(SLIDER_SELECTORS.HANDLE);
+
+      if (sliderHandles.length === 0) {
+        // No slider found, retry
+        setTimeout(() => this.observeActiveSlider(), 100);
+        return;
+      }
 
       sliderHandles.forEach((handle) => {
         // Get initial value
@@ -60,7 +71,9 @@ export class SliderController {
         observer.observe(handle, { attributes: true });
         this.observers.push(observer);
       });
-    }, 50);
+
+      console.log(`✅ Slider observer attached (${sliderHandles.length} handles found)`);
+    }, 150);
   }
 
   /**
