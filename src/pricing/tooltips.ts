@@ -103,7 +103,7 @@ export class TooltipManager {
         // Avoid duplication if already loaded
         if (instance._lottieAnimation) return;
 
-        const reference = instance.reference;
+        const { reference } = instance;
         const jsonUrl = reference.getAttribute(DATA_ATTRIBUTES.LOTTIE);
         const container = instance.popper.querySelector('[id^="lottie-"]');
 
@@ -143,4 +143,3 @@ export class TooltipManager {
     return this.initialized;
   }
 }
-

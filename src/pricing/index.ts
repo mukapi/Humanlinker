@@ -3,16 +3,16 @@
  * Manages Pro plans with dynamic pricing, user counts, billing periods, and currency conversion
  */
 
-import { PlanCalculator } from './plan-calculator';
 import { BillingPeriodManager } from './billing-period';
-import { UserSelector } from './user-selector';
-import { SliderController } from './slider-controller';
 import { CurrencyManager } from './currency-manager';
 import { LanguageDetector } from './language-detector';
-import { PricingDisplay } from './pricing-display';
 import { PlaceholderClickManager } from './placeholder-clicks';
+import { PlanCalculator } from './plan-calculator';
+import { PricingDisplay } from './pricing-display';
+import { SliderController } from './slider-controller';
 import { TooltipManager } from './tooltips';
 import type { CurrencyCode, PricingState, SliderValue, UserCount } from './types';
+import { UserSelector } from './user-selector';
 
 /**
  * Main pricing system orchestrator
@@ -211,4 +211,3 @@ if ((window as any).fsAttributes) {
 // Export for module usage
 export { PricingSystem };
 export type { CurrencyCode, PricingState, SliderValue, UserCount };
-

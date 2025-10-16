@@ -27,9 +27,11 @@ export class LanguageDetector {
 
     if (currentLang.startsWith('fr')) {
       return 'EUR';
-    } else if (currentLang === 'en' || currentLang.startsWith('en-US')) {
+    }
+    if (currentLang === 'en' || currentLang.startsWith('en-US')) {
       return 'USD';
-    } else if (currentLang === 'en-GB') {
+    }
+    if (currentLang === 'en-GB') {
       return 'GBP';
     }
 
@@ -79,4 +81,3 @@ export class LanguageDetector {
     }
   }
 }
-

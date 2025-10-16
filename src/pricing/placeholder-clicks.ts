@@ -81,7 +81,7 @@ export class PlaceholderClickManager {
     );
     const index = allPlaceholders.indexOf(placeholder);
 
-    return (Math.max(1, Math.min(4, index + 1)) as PlaceholderPosition);
+    return Math.max(1, Math.min(4, index + 1)) as PlaceholderPosition;
   }
 
   /**
@@ -220,4 +220,3 @@ export class PlaceholderClickManager {
     this.placeholders = [];
   }
 }
-

@@ -1,5 +1,5 @@
-import type { BillingPeriod } from './types';
 import { CSS_CLASSES, DATA_ATTRIBUTES } from './constants';
+import type { BillingPeriod } from './types';
 
 /**
  * Manages billing period tab switching
@@ -118,4 +118,3 @@ export class BillingPeriodManager {
     }
   }
 }
-

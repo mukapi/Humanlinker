@@ -1,5 +1,5 @@
-import type { BillingPeriod, UserCount } from './types';
 import { CSS_CLASSES, DATA_ATTRIBUTES } from './constants';
+import type { BillingPeriod, UserCount } from './types';
 
 /**
  * Manages user count selection from dropdown
@@ -27,9 +27,7 @@ export class UserSelector {
    * Setup dropdown item click listeners
    */
   private setupDropdownListeners(): void {
-    const userItems = document.querySelectorAll<HTMLElement>(
-      `.${CSS_CLASSES.DROPDOWN_LIST_ITEM}`
-    );
+    const userItems = document.querySelectorAll<HTMLElement>(`.${CSS_CLASSES.DROPDOWN_LIST_ITEM}`);
 
     userItems.forEach((item) => {
       item.addEventListener('click', () => this.handleUserSelect(item));
@@ -166,4 +164,3 @@ export class UserSelector {
     this.onChangeCallbacks.forEach((callback) => callback(users, period));
   }
 }
-

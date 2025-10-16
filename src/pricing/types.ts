@@ -116,4 +116,3 @@ export interface PricingElements {
   countDisplays?: NodeListOf<HTMLElement>;
   currencySelector?: HTMLSelectElement;
 }
-

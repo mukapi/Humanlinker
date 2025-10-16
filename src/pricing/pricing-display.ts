@@ -1,5 +1,5 @@
+import { CSS_CLASSES, DATA_ATTRIBUTES } from './constants';
 import type { PricingResult } from './types';
-import { DATA_ATTRIBUTES, CSS_CLASSES } from './constants';
 
 /**
  * Manages updating the pricing display in the DOM
@@ -57,10 +57,7 @@ export class PricingDisplay {
   private updateFeatures(result: PricingResult): void {
     // Credits IA
     this.updateElements(`[${DATA_ATTRIBUTES.CREDITS_IA}]`, result.creditsIA.toString());
-    this.updateElements(
-      `[${DATA_ATTRIBUTES.CREDITS_IA}="true"]`,
-      result.creditsIA.toString()
-    );
+    this.updateElements(`[${DATA_ATTRIBUTES.CREDITS_IA}="true"]`, result.creditsIA.toString());
     this.updateElements(`[${DATA_ATTRIBUTES.CREDITS_IA_TEXT}]`, result.creditsIA.toString());
 
     // Special handling for credits in highlight boxes
@@ -75,16 +72,10 @@ export class PricingDisplay {
 
     // Boites email
     this.updateElements(`[${DATA_ATTRIBUTES.BOITES_EMAIL}]`, result.boitesEmail.toString());
-    this.updateElements(
-      `[${DATA_ATTRIBUTES.BOITES_EMAIL_TEXT}]`,
-      result.boitesEmail.toString()
-    );
+    this.updateElements(`[${DATA_ATTRIBUTES.BOITES_EMAIL_TEXT}]`, result.boitesEmail.toString());
 
     // Comptes LinkedIn
-    this.updateElements(
-      `[${DATA_ATTRIBUTES.COMPTES_LINKEDIN}]`,
-      result.comptesLinkedin.toString()
-    );
+    this.updateElements(`[${DATA_ATTRIBUTES.COMPTES_LINKEDIN}]`, result.comptesLinkedin.toString());
     this.updateElements(
       `[${DATA_ATTRIBUTES.COMPTES_LINKEDIN_TEXT}]`,
       result.comptesLinkedin.toString()
@@ -117,10 +108,7 @@ export class PricingDisplay {
     );
 
     // Contacts analysables
-    this.updateElements(
-      `[${DATA_ATTRIBUTES.CONTACTS_ANALYSABLES}]`,
-      result.contactsAnalysables
-    );
+    this.updateElements(`[${DATA_ATTRIBUTES.CONTACTS_ANALYSABLES}]`, result.contactsAnalysables);
   }
 
   /**
@@ -128,9 +116,7 @@ export class PricingDisplay {
    */
   private updateUserDisplay(result: PricingResult): void {
     const userText =
-      result.users === 1
-        ? "Jusqu'à 1 utilisateur"
-        : `Jusqu'à ${result.users} utilisateurs`;
+      result.users === 1 ? "Jusqu'à 1 utilisateur" : `Jusqu'à ${result.users} utilisateurs`;
 
     this.updateElements(`[${DATA_ATTRIBUTES.USER_DISPLAY}]`, userText);
 
@@ -175,4 +161,3 @@ export class PricingDisplay {
     );
   }
 }
-

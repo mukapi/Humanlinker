@@ -1,11 +1,5 @@
-import type {
-  BillingPeriod,
-  CurrencyCode,
-  PricingResult,
-  PricingState,
-  UserCount,
-} from './types';
 import { BILLING_DISCOUNTS, CURRENCIES, FEATURE_FLAGS, PRO_PLANS } from './constants';
+import type { BillingPeriod, CurrencyCode, PricingResult, PricingState, UserCount } from './types';
 
 /**
  * Calculate pricing based on current state
@@ -89,4 +83,3 @@ export class PlanCalculator {
     return `Up to ${count} user${count > 1 ? 's' : ''}`;
   }
 }
-

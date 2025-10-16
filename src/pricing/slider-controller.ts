@@ -1,5 +1,5 @@
+import { CSS_CLASSES, SLIDER_SELECTORS } from './constants';
 import type { SliderValue } from './types';
-import { SLIDER_SELECTORS, CSS_CLASSES } from './constants';
 
 /**
  * Controls the pricing plan slider
@@ -31,9 +31,7 @@ export class SliderController {
       const activeTabPane = this.getActiveTabPane();
       if (!activeTabPane) return;
 
-      const sliderHandles = activeTabPane.querySelectorAll<HTMLElement>(
-        SLIDER_SELECTORS.HANDLE
-      );
+      const sliderHandles = activeTabPane.querySelectorAll<HTMLElement>(SLIDER_SELECTORS.HANDLE);
 
       sliderHandles.forEach((handle) => {
         // Get initial value
@@ -154,4 +152,3 @@ export class SliderController {
     this.cleanup();
   }
 }
-

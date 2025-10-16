@@ -1,5 +1,5 @@
-import type { CurrencyCode } from './types';
 import { CURRENCIES, DATA_ATTRIBUTES, DEFAULT_CURRENCY } from './constants';
+import type { CurrencyCode } from './types';
 
 /**
  * Manages currency selection and conversion
@@ -25,9 +25,7 @@ export class CurrencyManager {
    * Detect the current currency from the selector
    */
   private detectCurrentCurrency(): void {
-    this.currencySelector = document.querySelector(
-      `[${DATA_ATTRIBUTES.CURRENCY_SELECTOR}]`
-    );
+    this.currencySelector = document.querySelector(`[${DATA_ATTRIBUTES.CURRENCY_SELECTOR}]`);
 
     if (this.currencySelector?.value) {
       const code = this.extractCurrencyCode(this.currencySelector.value);
@@ -76,7 +74,6 @@ export class CurrencyManager {
 
     // Update selector if it exists
     if (this.currencySelector) {
-      const currencyInfo = CURRENCIES[currency];
       const matchingOption = Array.from(this.currencySelector.options).find(
         (option) => this.extractCurrencyCode(option.value) === currency
       );
@@ -104,4 +101,3 @@ export class CurrencyManager {
     return CURRENCIES[currency || this.currentCurrency].symbol;
   }
 }
-

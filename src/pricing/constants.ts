@@ -164,4 +164,3 @@ export const SLIDER_SELECTORS = {
   WRAPPER: '[fs-rangeslider-element="wrapper"]',
   DISPLAY_VALUE: '[fs-rangeslider-element="display-value"]',
 } as const;
-
