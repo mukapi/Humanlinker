@@ -108,14 +108,14 @@ window.HumanlinkerPricing.reinit()
 ### URL de Production
 
 ```
-https://arthurvu.github.io/Humanlinker/pricing/index.js
+https://mukapi.github.io/Humanlinker/pricing/index.js
 ```
 
 ### Intégration Webflow
 
 ```html
 <!-- Dans Page Settings → Before </body> tag -->
-<script defer src="https://arthurvu.github.io/Humanlinker/pricing/index.js"></script>
+<script defer src="https://mukapi.github.io/Humanlinker/pricing/index.js"></script>
 ```
 
 ## 📊 Avantages de la Nouvelle Architecture
@@ -195,7 +195,7 @@ Dans **Page Settings** → **Custom Code** → **Before `</body>` tag** :
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.12.2/lottie.min.js"></script>
 
 <!-- Système de pricing -->
-<script defer src="https://arthurvu.github.io/Humanlinker/pricing/index.js"></script>
+<script defer src="https://mukapi.github.io/Humanlinker/pricing/index.js"></script>
 ```
 
 ### 7. Supprimer les anciens scripts Webflow

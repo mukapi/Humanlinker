@@ -14,13 +14,7 @@ Après compilation, deux fichiers JavaScript sont disponibles :
 Une fois le workflow GitHub Actions exécuté, vos fichiers seront disponibles sur :
 
 ```
-https://arthurvu.github.io/Humanlinker/pricing/index.js
-```
-
-**OU** (selon votre configuration GitHub Pages) :
-
-```
-https://<votre-username>.github.io/Humanlinker/pricing/index.js
+https://mukapi.github.io/Humanlinker/pricing/index.js
 ```
 
 ## 📝 Code à ajouter dans Webflow
@@ -30,7 +24,7 @@ https://<votre-username>.github.io/Humanlinker/pricing/index.js
 Allez dans **Page Settings** → **Custom Code** → **Before `</body>` tag** et ajoutez :
 
 ```html
-<script defer src="https://arthurvu.github.io/Humanlinker/pricing/index.js"></script>
+<script defer src="https://mukapi.github.io/Humanlinker/pricing/index.js"></script>
 ```
 
 ### Option 2 : Dans un Embed HTML
@@ -38,7 +32,7 @@ Allez dans **Page Settings** → **Custom Code** → **Before `</body>` tag** et
 Vous pouvez aussi ajouter un **Embed HTML** n'importe où sur la page :
 
 ```html
-<script defer src="https://arthurvu.github.io/Humanlinker/pricing/index.js"></script>
+<script defer src="https://mukapi.github.io/Humanlinker/pricing/index.js"></script>
 ```
 
 ## ⚙️ Configuration GitHub Pages
