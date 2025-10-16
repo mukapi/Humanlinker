@@ -233,6 +233,26 @@ if (
   }, 1000);
 }
 
+// Webflow translation + UsePastel compatibility
+// Detect if we're in a translated environment (FR) with UsePastel
+const isTranslatedEnvironment =
+  document.documentElement.getAttribute('lang') === 'fr' ||
+  window.location.pathname.includes('/fr/') ||
+  window.location.pathname.includes('/french/');
+
+if (
+  isTranslatedEnvironment &&
+  (window.location.hostname.includes('usepastel.com') || window.location.hostname.includes('proxy'))
+) {
+  // Force initialization for translated UsePastel environments
+  setTimeout(() => {
+    if (!fsInitialized) {
+      fsInitialized = true;
+      pricingSystem.init();
+    }
+  }, 1500);
+}
+
 // Last fallback: DOM ready with delay
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
@@ -273,6 +293,17 @@ if (
     }, 2000);
   };
   document.head.appendChild(script);
+}
+
+// Additional fallback for translated environments
+if (isTranslatedEnvironment) {
+  // Force initialization after a longer delay for translated pages
+  setTimeout(() => {
+    if (!fsInitialized) {
+      fsInitialized = true;
+      pricingSystem.init();
+    }
+  }, 3000);
 }
 
 // Export for module usage
