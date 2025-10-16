@@ -1,5 +1,5 @@
 import { BILLING_DISCOUNTS, CURRENCIES, FEATURE_FLAGS, PRO_PLANS } from './constants';
-import type { BillingPeriod, CurrencyCode, PricingResult, PricingState, UserCount } from './types';
+import type { BillingPeriod, PricingResult, PricingState, UserCount } from './types';
 
 /**
  * Calculate pricing based on current state

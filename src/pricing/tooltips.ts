@@ -95,7 +95,6 @@ export class TooltipManager {
       placement: 'top',
       maxWidth: 280,
       content: (reference: HTMLElement) => {
-        const jsonUrl = reference.getAttribute(DATA_ATTRIBUTES.LOTTIE);
         const containerId = `lottie-${Date.now()}${Math.random().toString(36).substr(2, 5)}`;
         return `<div id="${containerId}" style="width:260px;height:200px;"></div>`;
       },

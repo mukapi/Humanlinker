@@ -194,7 +194,7 @@ if (!(window as any).fsAttributes) {
 
 (window as any).fsAttributes.push([
   'rangeslider',
-  (rangeSliderInstances: any[]) => {
+  () => {
     if (!fsInitialized) {
       fsInitialized = true;
       setTimeout(() => {
