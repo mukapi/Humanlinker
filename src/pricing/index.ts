@@ -216,10 +216,22 @@ window.Webflow.push(() => {
     if (!fsInitialized) {
       fsInitialized = true;
       pricingSystem.init();
-      console.log('🚀 Humanlinker Pricing System ready (Webflow fallback)');
     }
   }, 500);
 });
+
+// UsePastel compatibility: Initialize immediately if in proxy environment
+if (
+  window.location.hostname.includes('usepastel.com') ||
+  window.location.hostname.includes('proxy')
+) {
+  setTimeout(() => {
+    if (!fsInitialized) {
+      fsInitialized = true;
+      pricingSystem.init();
+    }
+  }, 1000);
+}
 
 // Last fallback: DOM ready with delay
 if (document.readyState === 'loading') {
@@ -228,7 +240,6 @@ if (document.readyState === 'loading') {
       if (!fsInitialized) {
         fsInitialized = true;
         pricingSystem.init();
-        console.log('🚀 Humanlinker Pricing System ready (DOM fallback)');
       }
     }, 1000);
   });
@@ -237,9 +248,31 @@ if (document.readyState === 'loading') {
     if (!fsInitialized) {
       fsInitialized = true;
       pricingSystem.init();
-      console.log('🚀 Humanlinker Pricing System ready (immediate fallback)');
     }
   }, 1000);
+}
+
+// UsePastel additional fallback: Try to load script dynamically
+if (
+  window.location.hostname.includes('usepastel.com') ||
+  window.location.hostname.includes('proxy')
+) {
+  // Try to load the script directly from GitHub Pages
+  const script = document.createElement('script');
+  script.src = 'https://mukapi.github.io/Humanlinker/pricing/index.js';
+  script.onload = () => {
+    // Script loaded successfully, let it initialize
+  };
+  script.onerror = () => {
+    // If direct loading fails, initialize anyway after delay
+    setTimeout(() => {
+      if (!fsInitialized) {
+        fsInitialized = true;
+        pricingSystem.init();
+      }
+    }, 2000);
+  };
+  document.head.appendChild(script);
 }
 
 // Export for module usage
