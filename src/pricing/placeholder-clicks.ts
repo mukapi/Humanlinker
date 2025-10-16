@@ -38,8 +38,6 @@ export class PlaceholderClickManager {
     this.placeholders.forEach((placeholder) => {
       placeholder.addEventListener('click', () => this.handlePlaceholderClick(placeholder));
     });
-
-    console.log(`Placeholders initialized: ${this.placeholders.length} found`);
   }
 
   /**

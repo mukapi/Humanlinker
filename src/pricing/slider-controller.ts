@@ -71,8 +71,6 @@ export class SliderController {
         observer.observe(handle, { attributes: true });
         this.observers.push(observer);
       });
-
-      console.log(`✅ Slider observer attached (${sliderHandles.length} handles found)`);
     }, 150);
   }
 
