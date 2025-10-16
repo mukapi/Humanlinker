@@ -21,18 +21,23 @@ export class PlanCalculator {
 
     // Calculate base monthly price per user in EUR
     const pricePerUser = plan.price;
+    const originalMonthlyPrice = pricePerUser * users;
 
     // Apply billing period discount
-    let monthlyPrice = pricePerUser * users;
+    let discountedPrice = originalMonthlyPrice;
+    let hasDiscount = false;
 
     if (state.billingPeriod === 'annual') {
-      monthlyPrice = Math.round(monthlyPrice * BILLING_DISCOUNTS.annual);
+      discountedPrice = Math.round(originalMonthlyPrice * BILLING_DISCOUNTS.annual);
+      hasDiscount = true;
     } else if (state.billingPeriod === 'quarterly') {
-      monthlyPrice = Math.round(monthlyPrice * BILLING_DISCOUNTS.quarterly);
+      discountedPrice = Math.round(originalMonthlyPrice * BILLING_DISCOUNTS.quarterly);
+      hasDiscount = true;
     }
 
     // Convert to selected currency
-    const convertedPrice = Math.round(monthlyPrice * currency.exchangeRate);
+    const convertedPrice = Math.round(discountedPrice * currency.exchangeRate);
+    const convertedOriginalPrice = Math.round(originalMonthlyPrice * currency.exchangeRate);
 
     // Calculate features (multiplied by users, credits are PER MONTH regardless of billing period)
     const creditsIA = plan.creditsIA * users;
@@ -45,6 +50,8 @@ export class PlanCalculator {
     return {
       planName: plan.name,
       monthlyPrice: convertedPrice,
+      originalPrice: convertedOriginalPrice,
+      hasDiscount,
       currency: state.currency,
       currencySymbol: currency.symbol,
       users,

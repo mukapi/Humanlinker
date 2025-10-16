@@ -76,6 +76,8 @@ export interface PricingState {
 export interface PricingResult {
   planName: string;
   monthlyPrice: number;
+  originalPrice: number; // Prix sans remise (pour l'affichage barré)
+  hasDiscount: boolean; // true si quarterly ou annually
   currency: CurrencyCode;
   currencySymbol: string;
   users: UserCount;

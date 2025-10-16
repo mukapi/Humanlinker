@@ -11,6 +11,7 @@ export class PricingDisplay {
   public update(result: PricingResult): void {
     this.updatePlanName(result);
     this.updatePrice(result);
+    this.updateOriginalPrice(result);
     this.updateFeatures(result);
     this.updateUserDisplay(result);
     this.updateFreePrice(result);
@@ -39,6 +40,28 @@ export class PricingDisplay {
     document.querySelectorAll(`.${CSS_CLASSES.PRICE_CONTAINER}`).forEach((el) => {
       if (el.textContent?.includes('0')) {
         el.textContent = `0${result.currencySymbol}`;
+      }
+    });
+  }
+
+  /**
+   * Update original price displays (barré pour quarterly/annually)
+   */
+  private updateOriginalPrice(result: PricingResult): void {
+    const originalPriceElements = document.querySelectorAll<HTMLElement>(
+      `[${DATA_ATTRIBUTES.PLAN_PRICE_ORIGINAL}]`
+    );
+
+    originalPriceElements.forEach((el) => {
+      if (result.hasDiscount) {
+        // Afficher le prix original barré
+        el.textContent = `${result.originalPrice}${result.currencySymbol}`;
+        el.style.display = 'inline'; // ou 'block' selon votre design
+        el.style.textDecoration = 'line-through';
+        el.style.opacity = '0.6';
+      } else {
+        // Cacher le prix barré sur monthly
+        el.style.display = 'none';
       }
     });
   }

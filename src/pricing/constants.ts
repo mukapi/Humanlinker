@@ -92,6 +92,7 @@ export const DATA_ATTRIBUTES = {
   // Pricing attributes
   PLAN_NAME: 'data-plan-name',
   PLAN_PRICE: 'data-plan-price',
+  PLAN_PRICE_ORIGINAL: 'data-plan-price-original',
   CREDITS_IA: 'data-credits-ia',
   BOITES_EMAIL: 'data-boites-email',
   COMPTES_LINKEDIN: 'data-comptes-linkedin',
