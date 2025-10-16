@@ -86,56 +86,28 @@ export class PlaceholderClickManager {
 
   /**
    * Update slider position and value
+   * Works WITH Finsweet Range Slider instead of against it
    */
   private updateSlider(
     handle: HTMLElement,
     rangeWrapper: HTMLElement,
     value: PlaceholderPosition
   ): void {
-    // Update aria value
+    // Simply update the aria value - Finsweet will handle the rest
     handle.setAttribute('aria-valuenow', value.toString());
 
-    // Update display value
-    const displayValue = handle.querySelector<HTMLElement>(
-      '[fs-rangeslider-element="display-value"]'
-    );
-    if (displayValue) {
-      displayValue.textContent = value.toString();
-    }
+    // Dispatch change event to trigger Finsweet's internal update
+    const changeEvent = new Event('change', { bubbles: true });
+    handle.dispatchEvent(changeEvent);
 
-    // Calculate visual position
-    const track = rangeWrapper.querySelector<HTMLElement>('[fs-rangeslider-element="track"]');
-    if (!track) return;
+    // Also dispatch input event for compatibility
+    const inputEvent = new Event('input', { bubbles: true });
+    handle.dispatchEvent(inputEvent);
 
-    const trackWidth = track.offsetWidth;
-    const wrapper = rangeWrapper.querySelector<HTMLElement>('[fs-rangeslider-element="wrapper"]');
-
-    const min = parseInt(wrapper?.getAttribute('fs-rangeslider-min') || '1');
-    const max = parseInt(wrapper?.getAttribute('fs-rangeslider-max') || '4');
-
-    // Calculate position in pixels
-    const range = max - min;
-    const percentage = (value - min) / range;
-    const position = trackWidth * percentage;
-
-    // Update handle position
-    handle.style.left = `${position}px`;
-
-    // Update fill
-    const fill = track.querySelector<HTMLElement>('[fs-rangeslider-element="fill"]');
-    if (fill) {
-      fill.style.width = `${position}px`;
-    }
-
-    // Dispatch input event to trigger any listeners
-    const event = new Event('input', { bubbles: true });
-    handle.dispatchEvent(event);
-
-    // Adjust card position for last value
-    this.adjustCardPosition(handle, value);
-
-    // Trigger pricing update if function exists
-    this.triggerPricingUpdate();
+    // Give Finsweet time to update, then adjust card position
+    setTimeout(() => {
+      this.adjustCardPosition(handle, value);
+    }, 50);
   }
 
   /**
@@ -149,17 +121,6 @@ export class PlaceholderClickManager {
     card.style.left = value === 4 ? '-2.5rem' : '-1.5rem';
   }
 
-  /**
-   * Trigger pricing update if function exists
-   */
-  private triggerPricingUpdate(): void {
-    // Check if global update function exists
-    if (typeof (window as any).updatePricingDisplay === 'function') {
-      setTimeout(() => {
-        (window as any).updatePricingDisplay();
-      }, 10);
-    }
-  }
 
   /**
    * Setup mutation observer for dynamic content

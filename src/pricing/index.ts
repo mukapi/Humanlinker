@@ -184,28 +184,59 @@ class PricingSystem {
 // Create singleton instance
 const pricingSystem = new PricingSystem();
 
-// Initialize on DOM ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => pricingSystem.init());
-} else {
-  pricingSystem.init();
+// Wait for Finsweet Attributes to be ready
+let fsInitialized = false;
+
+// Listen for Finsweet Range Slider ready
+if (!(window as any).fsAttributes) {
+  (window as any).fsAttributes = [];
 }
 
-// Also initialize on Webflow ready
+(window as any).fsAttributes.push([
+  'rangeslider',
+  (rangeSliderInstances: any[]) => {
+    if (!fsInitialized) {
+      fsInitialized = true;
+      setTimeout(() => {
+        pricingSystem.init();
+        console.log('🚀 Humanlinker Pricing System ready (after Finsweet)');
+      }, 100);
+    }
+  },
+]);
+
+// Also initialize on Webflow ready (fallback)
 window.Webflow ||= [];
 window.Webflow.push(() => {
-  pricingSystem.init();
-  console.log('🚀 Humanlinker Pricing System ready');
+  // Wait a bit for Finsweet to load
+  setTimeout(() => {
+    if (!fsInitialized) {
+      fsInitialized = true;
+      pricingSystem.init();
+      console.log('🚀 Humanlinker Pricing System ready (Webflow fallback)');
+    }
+  }, 500);
 });
 
-// Finsweet attributes compatibility
-if ((window as any).fsAttributes) {
-  (window as any).fsAttributes.push([
-    'cmsload',
-    () => {
-      setTimeout(() => pricingSystem.init(), 300);
-    },
-  ]);
+// Last fallback: DOM ready with delay
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+      if (!fsInitialized) {
+        fsInitialized = true;
+        pricingSystem.init();
+        console.log('🚀 Humanlinker Pricing System ready (DOM fallback)');
+      }
+    }, 1000);
+  });
+} else {
+  setTimeout(() => {
+    if (!fsInitialized) {
+      fsInitialized = true;
+      pricingSystem.init();
+      console.log('🚀 Humanlinker Pricing System ready (immediate fallback)');
+    }
+  }, 1000);
 }
 
 // Export for module usage
