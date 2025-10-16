@@ -11,7 +11,6 @@ export class PricingDisplay {
   public update(result: PricingResult): void {
     this.updatePlanName(result);
     this.updatePrice(result);
-    this.updateOriginalPrice(result);
     this.updateFeatures(result);
     this.updateUserDisplay(result);
     this.updateFreePrice(result);
@@ -27,41 +26,27 @@ export class PricingDisplay {
   }
 
   /**
-   * Update price displays
+   * Update price displays with strikethrough on quarterly/annually
    */
   private updatePrice(result: PricingResult): void {
-    const priceText = `${result.monthlyPrice}${result.currencySymbol}`;
+    let priceHTML = '';
+
+    if (result.hasDiscount) {
+      // Quarterly ou Annually : Afficher prix barré → prix remisé
+      priceHTML = `<span style="text-decoration: line-through; opacity: 0.6; margin-right: 8px;">${result.originalPrice}${result.currencySymbol}</span><span style="margin: 0 4px;">→</span>${result.monthlyPrice}${result.currencySymbol}`;
+    } else {
+      // Monthly : Juste le prix normal
+      priceHTML = `${result.monthlyPrice}${result.currencySymbol}`;
+    }
 
     document.querySelectorAll(`[${DATA_ATTRIBUTES.PLAN_PRICE}]`).forEach((el) => {
-      el.textContent = priceText;
+      el.innerHTML = priceHTML;
     });
 
     // Also update any price containers that show "0€" etc
     document.querySelectorAll(`.${CSS_CLASSES.PRICE_CONTAINER}`).forEach((el) => {
       if (el.textContent?.includes('0')) {
         el.textContent = `0${result.currencySymbol}`;
-      }
-    });
-  }
-
-  /**
-   * Update original price displays (barré pour quarterly/annually)
-   */
-  private updateOriginalPrice(result: PricingResult): void {
-    const originalPriceElements = document.querySelectorAll<HTMLElement>(
-      `[${DATA_ATTRIBUTES.PLAN_PRICE_ORIGINAL}]`
-    );
-
-    originalPriceElements.forEach((el) => {
-      if (result.hasDiscount) {
-        // Afficher le prix original barré
-        el.textContent = `${result.originalPrice}${result.currencySymbol}`;
-        el.style.display = 'inline'; // ou 'block' selon votre design
-        el.style.textDecoration = 'line-through';
-        el.style.opacity = '0.6';
-      } else {
-        // Cacher le prix barré sur monthly
-        el.style.display = 'none';
       }
     });
   }
