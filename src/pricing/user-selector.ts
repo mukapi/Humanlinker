@@ -1,3 +1,5 @@
+import { closeDropdown } from '@finsweet/ts-utils';
+
 import { CSS_CLASSES, DATA_ATTRIBUTES } from './constants';
 import type { BillingPeriod, UserCount } from './types';
 
@@ -116,22 +118,15 @@ export class UserSelector {
   }
 
   /**
-   * Close dropdown
+   * Close dropdown using Finsweet helper
    */
   private closeDropdown(item: HTMLElement): void {
     const dropdown = item.closest(`.${CSS_CLASSES.DROPDOWN}`);
-
     if (!dropdown) return;
 
-    const dropdownList = dropdown.querySelector(`.${CSS_CLASSES.DROPDOWN_LIST}`);
-    if (dropdownList) {
-      dropdownList.classList.remove(CSS_CLASSES.DROPDOWN_OPEN);
-    }
-
-    const dropdownToggle = dropdown.querySelector(`.${CSS_CLASSES.DROPDOWN_TOGGLE}`);
+    const dropdownToggle = dropdown.querySelector<HTMLElement>(`.${CSS_CLASSES.DROPDOWN_TOGGLE}`);
     if (dropdownToggle) {
-      dropdownToggle.setAttribute('aria-expanded', 'false');
-      dropdownToggle.classList.remove(CSS_CLASSES.DROPDOWN_OPEN);
+      closeDropdown(dropdownToggle, false);
     }
   }
 

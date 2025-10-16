@@ -10,7 +10,10 @@ Pour que tout fonctionne correctement, mettez les scripts dans **CET ORDRE PRÉC
 
 ```html
 <!-- 1. Finsweet Range Slider (DOIT être AVANT votre script) -->
-<script defer src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-rangeslider@1/rangeslider.js"></script>
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/@finsweet/attributes-rangeslider@1/rangeslider.js"
+></script>
 
 <!-- 2. Tooltips - Popper (base pour Tippy) -->
 <script src="https://unpkg.com/@popperjs/core@2"></script>
@@ -36,8 +39,9 @@ Pour que tout fonctionne correctement, mettez les scripts dans **CET ORDRE PRÉC
 J'ai modifié `pricing/index.ts` pour qu'il :
 
 ✅ **Attende** que Finsweet Range Slider soit prêt avec :
+
 ```javascript
-fsAttributes.push(['rangeslider', callback])
+fsAttributes.push(['rangeslider', callback]);
 ```
 
 ✅ **N'interfère PAS** avec le slider Finsweet
@@ -47,6 +51,7 @@ fsAttributes.push(['rangeslider', callback])
 ## 🐛 Si ça ne marche toujours pas
 
 Dans la console (F12), vérifiez que vous voyez :
+
 ```
 ✅ Humanlinker Pricing System ready (after Finsweet)
 ```
@@ -56,6 +61,7 @@ Dans la console (F12), vérifiez que vous voyez :
 ## 💡 Test Rapide
 
 Dans la console, tapez :
+
 ```javascript
 // Vérifier que Finsweet est chargé
 console.log(window.fsAttributes);
@@ -83,4 +89,3 @@ window.HumanlinkerPricing.setPlan(2);
 ---
 
 **Note** : Si le slider ne fonctionne toujours pas sur Monthly, partagez-moi ce que vous voyez dans la console (F12), je pourrai debugger plus précisément !
-

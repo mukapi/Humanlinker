@@ -1,3 +1,5 @@
+import { simulateEvent } from '@finsweet/ts-utils';
+
 import { CSS_CLASSES } from './constants';
 
 /**
@@ -96,13 +98,8 @@ export class PlaceholderClickManager {
     // Simply update the aria value - Finsweet will handle the rest
     handle.setAttribute('aria-valuenow', value.toString());
 
-    // Dispatch change event to trigger Finsweet's internal update
-    const changeEvent = new Event('change', { bubbles: true });
-    handle.dispatchEvent(changeEvent);
-
-    // Also dispatch input event for compatibility
-    const inputEvent = new Event('input', { bubbles: true });
-    handle.dispatchEvent(inputEvent);
+    // Dispatch events using Finsweet helper
+    simulateEvent(handle, ['change', 'input']);
 
     // Give Finsweet time to update, then adjust card position
     setTimeout(() => {
@@ -120,7 +117,6 @@ export class PlaceholderClickManager {
     // Adjust position for the last item
     card.style.left = value === 4 ? '-2.5rem' : '-1.5rem';
   }
-
 
   /**
    * Setup mutation observer for dynamic content
