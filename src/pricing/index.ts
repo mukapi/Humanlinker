@@ -273,29 +273,6 @@ if (document.readyState === 'loading') {
   }, 1000);
 }
 
-// UsePastel additional fallback: Try to load script dynamically
-if (
-  window.location.hostname.includes('usepastel.com') ||
-  window.location.hostname.includes('proxy')
-) {
-  // Try to load the script directly from GitHub Pages
-  const script = document.createElement('script');
-  script.src = 'https://mukapi.github.io/Humanlinker/pricing/index.js';
-  script.onload = () => {
-    // Script loaded successfully, let it initialize
-  };
-  script.onerror = () => {
-    // If direct loading fails, initialize anyway after delay
-    setTimeout(() => {
-      if (!fsInitialized) {
-        fsInitialized = true;
-        pricingSystem.init();
-      }
-    }, 2000);
-  };
-  document.head.appendChild(script);
-}
-
 // Additional fallback for translated environments
 if (isTranslatedEnvironment) {
   // Force initialization after a longer delay for translated pages
