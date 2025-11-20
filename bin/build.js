@@ -8,8 +8,8 @@ const PRODUCTION = process.env.NODE_ENV === 'production';
 
 // Config entrypoint files
 const ENTRY_POINTS = [
-  'src/index.ts',
   'src/pricing/index.ts', // Pricing system module
+  'src/phone-credits.ts', // Phone credits slider
 ];
 
 // Config dev serving
