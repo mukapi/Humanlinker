@@ -66,11 +66,41 @@ export const CURRENCIES: Record<CurrencyCode, CurrencyInfo> = {
 };
 
 /**
- * Billing period discounts
+ * Billing period discounts (normal pricing)
  */
 export const BILLING_DISCOUNTS: BillingDiscount = {
   quarterly: 0.9, // -10%
   annual: 0.8, // -20%
+};
+
+/**
+ * ============================================================
+ * BLACK FRIDAY CONFIGURATION
+ * ============================================================
+ * Set BLACK_FRIDAY_ENABLED to true to activate Black Friday pricing
+ * Set to false to restore normal pricing after the promotion ends
+ *
+ * BLACK FRIDAY PRICES (annual plan only, fixed prices per currency):
+ * - Pro 1 (200 AI credits): €34.5 / $39.7 / £30.4 per month
+ * - Pro 2 (350 AI credits): €49.5 / $57.0 / £43.6 per month
+ * - Pro 3 (600 AI credits): €74.5 / $85.8 / £65.7 per month
+ *
+ * NORMAL PRICES (calculated with 20% annual discount):
+ * - Pro 1: €55.2 / $59.6 / £46.9 per month
+ * - Pro 2: €79.2 / $85.5 / £67.3 per month
+ * - Pro 3: €119.2 / $128.7 / £101.3 per month
+ * ============================================================
+ */
+export const BLACK_FRIDAY_ENABLED = true;
+
+/**
+ * Black Friday fixed prices per plan and currency (annual billing only)
+ * These are the final monthly prices displayed to users
+ */
+export const BLACK_FRIDAY_PRICES: Record<1 | 2 | 3, Record<CurrencyCode, number>> = {
+  1: { EUR: 34.5, USD: 39.7, GBP: 30.4 }, // Pro 1 - 200 AI credits
+  2: { EUR: 49.5, USD: 57.0, GBP: 43.6 }, // Pro 2 - 350 AI credits
+  3: { EUR: 74.5, USD: 85.8, GBP: 65.7 }, // Pro 3 - 600 AI credits
 };
 
 /**

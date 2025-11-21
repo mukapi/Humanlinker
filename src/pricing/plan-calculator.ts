@@ -1,4 +1,11 @@
-import { BILLING_DISCOUNTS, CURRENCIES, FEATURE_FLAGS, PRO_PLANS } from './constants';
+import {
+  BILLING_DISCOUNTS,
+  BLACK_FRIDAY_ENABLED,
+  BLACK_FRIDAY_PRICES,
+  CURRENCIES,
+  FEATURE_FLAGS,
+  PRO_PLANS,
+} from './constants';
 import type { BillingPeriod, PricingResult, PricingState, UserCount } from './types';
 
 /**
@@ -17,21 +24,37 @@ export class PlanCalculator {
     const pricePerUser = plan.price;
     const originalMonthlyPrice = pricePerUser * users;
 
-    // Apply billing period discount
+    // Apply billing period discount or Black Friday pricing
     let discountedPrice = originalMonthlyPrice;
     let hasDiscount = false;
+    let convertedPrice: number;
+    let convertedOriginalPrice: number;
 
-    if (state.billingPeriod === 'annual') {
-      discountedPrice = Math.round(originalMonthlyPrice * BILLING_DISCOUNTS.annual);
+    // Black Friday: use fixed prices for annual billing only
+    const planKey = state.currentPlan as 1 | 2 | 3;
+    if (
+      BLACK_FRIDAY_ENABLED &&
+      state.billingPeriod === 'annual' &&
+      planKey in BLACK_FRIDAY_PRICES
+    ) {
+      // Use fixed Black Friday price (already per user per month)
+      convertedPrice = Math.round(BLACK_FRIDAY_PRICES[planKey][state.currency] * users);
+      convertedOriginalPrice = Math.round(originalMonthlyPrice * currency.exchangeRate);
       hasDiscount = true;
-    } else if (state.billingPeriod === 'quarterly') {
-      discountedPrice = Math.round(originalMonthlyPrice * BILLING_DISCOUNTS.quarterly);
-      hasDiscount = true;
+    } else {
+      // Normal pricing logic
+      if (state.billingPeriod === 'annual') {
+        discountedPrice = Math.round(originalMonthlyPrice * BILLING_DISCOUNTS.annual);
+        hasDiscount = true;
+      } else if (state.billingPeriod === 'quarterly') {
+        discountedPrice = Math.round(originalMonthlyPrice * BILLING_DISCOUNTS.quarterly);
+        hasDiscount = true;
+      }
+
+      // Convert to selected currency
+      convertedPrice = Math.round(discountedPrice * currency.exchangeRate);
+      convertedOriginalPrice = Math.round(originalMonthlyPrice * currency.exchangeRate);
     }
-
-    // Convert to selected currency
-    const convertedPrice = Math.round(discountedPrice * currency.exchangeRate);
-    const convertedOriginalPrice = Math.round(originalMonthlyPrice * currency.exchangeRate);
 
     // Calculate features (multiplied by users, credits are PER MONTH regardless of billing period)
     const creditsIA = plan.creditsIA * users;

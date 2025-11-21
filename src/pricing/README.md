@@ -33,7 +33,35 @@ src/pricing/
 
 - **Mensuel**: Prix standard
 - **Trimestriel**: -10% de réduction
-- **Annuel**: -20% de réduction
+- **Annuel**: -20% de réduction (ou prix Black Friday si activé)
+
+### ✅ Black Friday (Promotions)
+
+Pour activer/désactiver le Black Friday, modifie `BLACK_FRIDAY_ENABLED` dans [constants.ts](constants.ts#L94) :
+
+```typescript
+// Activer Black Friday
+export const BLACK_FRIDAY_ENABLED = true;
+
+// Désactiver (retour aux prix normaux)
+export const BLACK_FRIDAY_ENABLED = false;
+```
+
+**Prix Black Friday (annuel uniquement, ~50% de réduction) :**
+
+| Plan | EUR | USD | GBP |
+|------|-----|-----|-----|
+| Pro 1 (200 crédits) | 34.5€ | $39.7 | £30.4 |
+| Pro 2 (350 crédits) | 49.5€ | $57.0 | £43.6 |
+| Pro 3 (600 crédits) | 74.5€ | $85.8 | £65.7 |
+
+**Prix normaux (annuel, -20%) :**
+
+| Plan | EUR | USD | GBP |
+|------|-----|-----|-----|
+| Pro 1 | 55.2€ | $59.6 | £46.9 |
+| Pro 2 | 79.2€ | $85.5 | £67.3 |
+| Pro 3 | 119.2€ | $128.7 | £101.3 |
 
 ### ✅ Multi-devises
 
