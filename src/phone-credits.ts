@@ -117,10 +117,16 @@ class PhoneCreditsManager {
     this.observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.type === 'attributes' && mutation.attributeName === 'aria-valuenow') {
-          const newCredits = this.getSliderValue();
+          const newPosition = this.getSliderValue();
+          const tier = this.getTierFromPosition(newPosition);
 
-          if (newCredits !== this.currentCredits) {
-            this.currentCredits = newCredits;
+          // eslint-disable-next-line no-console
+          console.log(
+            `📍 Slider moved: position=${newPosition}, credits=${tier.credits}, price=${tier.price}€`
+          );
+
+          if (newPosition !== this.currentCredits) {
+            this.currentCredits = newPosition;
             this.updateDisplay();
           }
         }
