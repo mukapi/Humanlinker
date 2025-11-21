@@ -209,14 +209,23 @@ class PhoneCreditsManager {
   }
 
   /**
-   * Determine position (1-4) from placeholder classes
+   * Determine position (1-4) from data-slider-position attribute
    */
   private getPositionFromPlaceholder(placeholder: HTMLElement): number {
+    // Use data-slider-position attribute (recommended)
+    const positionAttr = placeholder.getAttribute('data-slider-position');
+    if (positionAttr) {
+      const position = parseInt(positionAttr);
+      if (position >= 1 && position <= 4) return position;
+    }
+
+    // Fallback: check for is-X classes
     if (placeholder.classList.contains('is-1')) return 1;
     if (placeholder.classList.contains('is-2')) return 2;
-    if (placeholder.classList.contains('is-4')) return 4; // Note: is-4 exists in your HTML
+    if (placeholder.classList.contains('is-3')) return 3;
+    if (placeholder.classList.contains('is-4')) return 4;
 
-    // Fallback: determine from position in parent
+    // Last fallback: determine from position in parent
     const parent = placeholder.parentNode;
     if (!parent) return 1;
 

@@ -63,16 +63,23 @@ export class PlaceholderClickManager {
   }
 
   /**
-   * Determine value from placeholder classes or position
+   * Determine value from data-slider-position attribute, classes, or position
    */
   private determineValue(placeholder: HTMLElement): PlaceholderPosition {
-    // Check for is-1, is-2, is-3, is-4 classes
+    // Use data-slider-position attribute (recommended)
+    const positionAttr = placeholder.getAttribute('data-slider-position');
+    if (positionAttr) {
+      const position = parseInt(positionAttr);
+      if (position >= 1 && position <= 4) return position as PlaceholderPosition;
+    }
+
+    // Fallback: check for is-1, is-2, is-3, is-4 classes
     if (placeholder.classList.contains('is-1')) return 1;
     if (placeholder.classList.contains('is-2')) return 2;
     if (placeholder.classList.contains('is-3')) return 3;
     if (placeholder.classList.contains('is-4')) return 4;
 
-    // Fallback: determine from position in parent
+    // Last fallback: determine from position in parent
     const parent = placeholder.parentNode;
     if (!parent) return 1;
 
@@ -86,18 +93,52 @@ export class PlaceholderClickManager {
 
   /**
    * Update slider position and value
-   * Works WITH Finsweet Range Slider instead of against it
+   * Works WITH Finsweet Range Slider using mousedown + mouseup events
    */
   private updateSlider(
     handle: HTMLElement,
-    rangeWrapper: HTMLElement,
+    _rangeWrapper: HTMLElement,
     value: PlaceholderPosition
   ): void {
-    // Simply update the aria value - Finsweet will handle the rest
-    handle.setAttribute('aria-valuenow', value.toString());
+    // Find the track element
+    const track = handle.closest<HTMLElement>('[fs-rangeslider-element="track"]');
+    if (!track) {
+      // Fallback to old method if track not found
+      handle.setAttribute('aria-valuenow', value.toString());
+      simulateEvent(handle, ['change', 'input']);
+      return;
+    }
 
-    // Dispatch events using Finsweet helper
-    simulateEvent(handle, ['change', 'input']);
+    // Get slider config from wrapper
+    const wrapper = handle.closest<HTMLElement>('[fs-rangeslider-element="wrapper"]');
+    const min = parseInt(wrapper?.getAttribute('fs-rangeslider-min') || '1');
+    const max = parseInt(wrapper?.getAttribute('fs-rangeslider-max') || '3');
+
+    // Calculate click position on track
+    const trackRect = track.getBoundingClientRect();
+    const percentage = (value - min) / (max - min);
+    const clickX = trackRect.left + trackRect.width * percentage;
+    const clickY = trackRect.top + trackRect.height / 2;
+
+    // Finsweet listens to mousedown + mouseup (not click)
+    const mouseDown = new MouseEvent('mousedown', {
+      bubbles: true,
+      cancelable: true,
+      clientX: clickX,
+      clientY: clickY,
+      view: window,
+    });
+
+    const mouseUp = new MouseEvent('mouseup', {
+      bubbles: true,
+      cancelable: true,
+      clientX: clickX,
+      clientY: clickY,
+      view: window,
+    });
+
+    track.dispatchEvent(mouseDown);
+    track.dispatchEvent(mouseUp);
 
     // Give Finsweet time to update, then adjust card position
     setTimeout(() => {
