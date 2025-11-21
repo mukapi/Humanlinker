@@ -16,13 +16,14 @@ const PHONE_PRICING_TIERS = [
 
 /**
  * Finsweet slider configuration
+ * Slider now uses 1-4 positions, mapped to credit tiers
  */
 const SLIDER_CONFIG = {
   handle: '[fs-rangeslider-element="handle-3"]',
   displayValue: '[fs-rangeslider-element="display-value-3"]',
-  min: 100,
-  max: 600,
-  step: 50,
+  min: 1,
+  max: 4,
+  step: 1,
 } as const;
 
 /**
@@ -69,16 +70,12 @@ class PhoneCreditsManager {
   }
 
   /**
-   * Snap slider value to nearest valid tier
-   * Maps any slider value to one of the 4 exact tiers: 100, 200, 350, 600
+   * Map slider position (1-4) to credit tier
+   * Position 1 → 100 credits, 2 → 200, 3 → 350, 4 → 600
    */
-  private snapToNearestTier(sliderValue: number): { credits: number; price: number } {
-    // Define tier boundaries (midpoints between tiers)
-    // 100 ← [100-150) | 200 ← [150-275) | 350 ← [275-475) | 600 ← [475-600]
-    if (sliderValue < 150) return PHONE_PRICING_TIERS[0]; // 100 credits
-    if (sliderValue < 275) return PHONE_PRICING_TIERS[1]; // 200 credits
-    if (sliderValue < 475) return PHONE_PRICING_TIERS[2]; // 350 credits
-    return PHONE_PRICING_TIERS[3]; // 600 credits
+  private getTierFromPosition(position: number): { credits: number; price: number } {
+    const index = Math.max(0, Math.min(3, position - 1)); // Convert 1-4 to 0-3 index
+    return PHONE_PRICING_TIERS[index];
   }
 
   /**
@@ -96,7 +93,7 @@ class PhoneCreditsManager {
    */
   private updateDisplay(): void {
     // Snap to nearest tier (exact 4 packs only)
-    const tier = this.snapToNearestTier(this.currentCredits);
+    const tier = this.getTierFromPosition(this.currentCredits);
 
     // Update all elements with data-phone-count
     const countElements = document.querySelectorAll<HTMLElement>(`[${DATA_ATTRIBUTES.phoneCount}]`);
