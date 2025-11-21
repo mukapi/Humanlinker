@@ -106,6 +106,13 @@ class PhoneCreditsManager {
     priceElements.forEach((element) => {
       element.textContent = String(tier.price);
     });
+
+    // Override Finsweet display-value (it overwrites our value, so we delay to win)
+    setTimeout(() => {
+      countElements.forEach((element) => {
+        element.textContent = String(tier.credits);
+      });
+    }, 10);
   }
 
   /**
