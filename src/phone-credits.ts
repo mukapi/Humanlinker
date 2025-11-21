@@ -69,6 +69,19 @@ class PhoneCreditsManager {
   }
 
   /**
+   * Snap slider value to nearest valid tier
+   * Maps any slider value to one of the 4 exact tiers: 100, 200, 350, 600
+   */
+  private snapToNearestTier(sliderValue: number): { credits: number; price: number } {
+    // Define tier boundaries (midpoints between tiers)
+    // 100 ← [100-150) | 200 ← [150-275) | 350 ← [275-475) | 600 ← [475-600]
+    if (sliderValue < 150) return PHONE_PRICING_TIERS[0]; // 100 credits
+    if (sliderValue < 275) return PHONE_PRICING_TIERS[1]; // 200 credits
+    if (sliderValue < 475) return PHONE_PRICING_TIERS[2]; // 350 credits
+    return PHONE_PRICING_TIERS[3]; // 600 credits
+  }
+
+  /**
    * Get current slider value from handle
    */
   private getSliderValue(): number {
@@ -79,55 +92,22 @@ class PhoneCreditsManager {
   }
 
   /**
-   * Calculate price using linear interpolation between tiers
-   */
-  private calculatePrice(credits: number): number {
-    // Find the two tiers to interpolate between
-    let lowerTier = PHONE_PRICING_TIERS[0];
-    let upperTier = PHONE_PRICING_TIERS[PHONE_PRICING_TIERS.length - 1];
-
-    for (let i = 0; i < PHONE_PRICING_TIERS.length - 1; i++) {
-      if (
-        credits >= PHONE_PRICING_TIERS[i].credits &&
-        credits <= PHONE_PRICING_TIERS[i + 1].credits
-      ) {
-        lowerTier = PHONE_PRICING_TIERS[i];
-        upperTier = PHONE_PRICING_TIERS[i + 1];
-        break;
-      }
-    }
-
-    // If exactly on a tier, return that price
-    if (credits === lowerTier.credits) return lowerTier.price;
-    if (credits === upperTier.credits) return upperTier.price;
-
-    // Linear interpolation: price = price1 + (credits - credits1) * (price2 - price1) / (credits2 - credits1)
-    const creditsDiff = upperTier.credits - lowerTier.credits;
-    const priceDiff = upperTier.price - lowerTier.price;
-    const creditsFromLower = credits - lowerTier.credits;
-
-    const interpolatedPrice = lowerTier.price + (creditsFromLower * priceDiff) / creditsDiff;
-
-    // Round to nearest euro
-    return Math.round(interpolatedPrice);
-  }
-
-  /**
    * Update all DOM elements with current values
    */
   private updateDisplay(): void {
-    const price = this.calculatePrice(this.currentCredits);
+    // Snap to nearest tier (exact 4 packs only)
+    const tier = this.snapToNearestTier(this.currentCredits);
 
     // Update all elements with data-phone-count
     const countElements = document.querySelectorAll<HTMLElement>(`[${DATA_ATTRIBUTES.phoneCount}]`);
     countElements.forEach((element) => {
-      element.textContent = String(this.currentCredits);
+      element.textContent = String(tier.credits);
     });
 
     // Update all elements with data-phone-price
     const priceElements = document.querySelectorAll<HTMLElement>(`[${DATA_ATTRIBUTES.phonePrice}]`);
     priceElements.forEach((element) => {
-      element.textContent = String(price);
+      element.textContent = String(tier.price);
     });
   }
 
