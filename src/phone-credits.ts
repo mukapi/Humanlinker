@@ -4,6 +4,8 @@
  * Updated: January 2025
  */
 
+import { simulateEvent } from '@finsweet/ts-utils';
+
 /**
  * Phone credits pricing tiers
  */
@@ -62,6 +64,9 @@ class PhoneCreditsManager {
 
       // Setup observer for slider changes
       this.setupObserver();
+
+      // Setup placeholder clicks for quick position selection
+      this.setupPlaceholderClicks();
 
       console.log('✅ Phone Credits Manager initialized');
     } catch (error) {
@@ -141,6 +146,62 @@ class PhoneCreditsManager {
     });
 
     this.observer.observe(this.handle, { attributes: true });
+  }
+
+  /**
+   * Setup placeholder click handlers for quick position selection
+   */
+  private setupPlaceholderClicks(): void {
+    // Find placeholders within the phone credits slider section
+    const rangeWrapper = this.handle?.closest('.pricing_main_highlight_range_wrap');
+    if (!rangeWrapper) return;
+
+    const placeholders = rangeWrapper.querySelectorAll<HTMLElement>(
+      '.pricing_main_highlight_placeholder'
+    );
+
+    placeholders.forEach((placeholder) => {
+      placeholder.style.cursor = 'pointer';
+      placeholder.addEventListener('click', () => this.handlePlaceholderClick(placeholder));
+    });
+  }
+
+  /**
+   * Handle placeholder click - move slider to that position
+   */
+  private handlePlaceholderClick(placeholder: HTMLElement): void {
+    const position = this.getPositionFromPlaceholder(placeholder);
+    if (!this.handle) return;
+
+    // Update slider position
+    this.handle.setAttribute('aria-valuenow', String(position));
+
+    // Dispatch events to trigger Finsweet update
+    simulateEvent(this.handle, ['change', 'input']);
+
+    // Update our display
+    this.currentCredits = position;
+    this.updateDisplay();
+  }
+
+  /**
+   * Determine position (1-4) from placeholder classes
+   */
+  private getPositionFromPlaceholder(placeholder: HTMLElement): number {
+    if (placeholder.classList.contains('is-1')) return 1;
+    if (placeholder.classList.contains('is-2')) return 2;
+    if (placeholder.classList.contains('is-4')) return 4; // Note: is-4 exists in your HTML
+
+    // Fallback: determine from position in parent
+    const parent = placeholder.parentNode;
+    if (!parent) return 1;
+
+    const allPlaceholders = Array.from(
+      parent.querySelectorAll<HTMLElement>('.pricing_main_highlight_placeholder')
+    );
+    const index = allPlaceholders.indexOf(placeholder);
+
+    return Math.max(1, Math.min(4, index + 1));
   }
 
   /**
