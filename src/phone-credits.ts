@@ -181,17 +181,27 @@ class PhoneCreditsManager {
     const clickX = trackRect.left + trackRect.width * percentage;
     const clickY = trackRect.top + trackRect.height / 2;
 
-    // Simulate a real mouse click on the track at the calculated position
-    const clickEvent = new MouseEvent('click', {
+    // Finsweet listens to mousedown + mouseup (not click)
+    const mouseDown = new MouseEvent('mousedown', {
       bubbles: true,
       cancelable: true,
       clientX: clickX,
       clientY: clickY,
+      view: window,
     });
 
-    track.dispatchEvent(clickEvent);
+    const mouseUp = new MouseEvent('mouseup', {
+      bubbles: true,
+      cancelable: true,
+      clientX: clickX,
+      clientY: clickY,
+      view: window,
+    });
 
-    // Update our display after Finsweet handles the click
+    track.dispatchEvent(mouseDown);
+    track.dispatchEvent(mouseUp);
+
+    // Update our display after Finsweet handles the events
     setTimeout(() => {
       this.currentCredits = position;
       this.updateDisplay();
