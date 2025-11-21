@@ -37,8 +37,8 @@ export class PlanCalculator {
       state.billingPeriod === 'annual' &&
       planKey in BLACK_FRIDAY_PRICES
     ) {
-      // Use fixed Black Friday price (already per user per month)
-      convertedPrice = Math.round(BLACK_FRIDAY_PRICES[planKey][state.currency] * users);
+      // Use fixed Black Friday price (already per user per month) - no rounding to show exact prices
+      convertedPrice = BLACK_FRIDAY_PRICES[planKey][state.currency] * users;
       convertedOriginalPrice = Math.round(originalMonthlyPrice * currency.exchangeRate);
       hasDiscount = true;
     } else {
