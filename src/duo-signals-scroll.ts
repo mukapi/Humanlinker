@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
    * Crée une animation pour une stripe avec easing progressif
    */
   function createStripeAnimation(el: HTMLElement, direction: Direction): void {
-    const firstChild = el.firstChild as HTMLElement | null;
+    const firstChild = el.firstElementChild as HTMLElement | null;
     if (!firstChild) return;
 
     const length = firstChild.getBoundingClientRect().width;
