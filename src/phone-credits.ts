@@ -4,8 +4,6 @@
  * Updated: January 2025
  */
 
-import { simulateEvent } from '@finsweet/ts-utils';
-
 /**
  * Phone credits pricing tiers
  */
@@ -173,15 +171,31 @@ class PhoneCreditsManager {
     const position = this.getPositionFromPlaceholder(placeholder);
     if (!this.handle) return;
 
-    // Update slider position
-    this.handle.setAttribute('aria-valuenow', String(position));
+    // Find the track element
+    const track = this.handle.closest<HTMLElement>('[fs-rangeslider-element="track-3"]');
+    if (!track) return;
 
-    // Dispatch events to trigger Finsweet update
-    simulateEvent(this.handle, ['change', 'input']);
+    // Calculate click position on track (position 1-4 maps to 0%, 33%, 66%, 100%)
+    const trackRect = track.getBoundingClientRect();
+    const percentage = (position - 1) / 3;
+    const clickX = trackRect.left + trackRect.width * percentage;
+    const clickY = trackRect.top + trackRect.height / 2;
 
-    // Update our display
-    this.currentCredits = position;
-    this.updateDisplay();
+    // Simulate a real mouse click on the track at the calculated position
+    const clickEvent = new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+      clientX: clickX,
+      clientY: clickY,
+    });
+
+    track.dispatchEvent(clickEvent);
+
+    // Update our display after Finsweet handles the click
+    setTimeout(() => {
+      this.currentCredits = position;
+      this.updateDisplay();
+    }, 50);
   }
 
   /**
