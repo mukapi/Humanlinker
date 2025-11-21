@@ -10,6 +10,7 @@ const PRODUCTION = process.env.NODE_ENV === 'production';
 const ENTRY_POINTS = [
   'src/pricing/index.ts', // Pricing system module
   'src/phone-credits.ts', // Phone credits slider
+  'src/duo-signals-scroll.ts', // Duo signals horizontal scroll animation
 ];
 
 // Config dev serving
