@@ -8,6 +8,7 @@ import { BillingPeriodManager } from './billing-period';
 import { CurrencyManager } from './currency-manager';
 import { LanguageDetector } from './language-detector';
 import { PlaceholderClickManager } from './placeholder-clicks';
+import { PlaceholderClickManager } from './placeholder-clicks';
 import { PlanCalculator } from './plan-calculator';
 import { PricingDisplay } from './pricing-display';
 import { SliderController } from './slider-controller';

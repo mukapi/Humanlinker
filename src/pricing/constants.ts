@@ -91,7 +91,7 @@ export const BILLING_DISCOUNTS: BillingDiscount = {
  * - Pro 3: €119.2 / $128.7 / £101.3 per month
  * ============================================================
  */
-export const BLACK_FRIDAY_ENABLED = false;
+export const BLACK_FRIDAY_ENABLED = true;
 
 /**
  * Black Friday fixed prices per plan and currency (annual billing only)
