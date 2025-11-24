@@ -20,55 +20,30 @@ export class LanguageDetector {
 
   /**
    * Detect current language and get suggested currency
+   * Always returns EUR as default, regardless of language
    */
   public detectCurrency(): CurrencyCode {
-    const htmlTag = document.documentElement;
-    const currentLang = htmlTag.getAttribute('lang') || '';
-
-    if (currentLang.startsWith('fr')) {
-      return 'EUR';
-    }
-    if (currentLang === 'en' || currentLang.startsWith('en-US')) {
-      return 'USD';
-    }
-    if (currentLang === 'en-GB') {
-      return 'GBP';
-    }
-
-    // Default to EUR
+    // Always default to EUR regardless of language
+    // Users can still manually change currency via selector
     return 'EUR';
   }
 
   /**
    * Setup observer for HTML lang attribute changes
+   * Observer is disabled - currency no longer changes with language
    */
   private setupLanguageObserver(): void {
-    const htmlTag = document.documentElement;
-
-    this.htmlObserver = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'lang') {
-          const newCurrency = this.detectCurrency();
-          this.notifyChange(newCurrency);
-        }
-      });
-    });
-
-    this.htmlObserver.observe(htmlTag, { attributes: true });
+    // Observer disabled - we always stay on EUR by default
+    // Users must manually change currency if desired
+    return;
   }
 
   /**
    * Register a callback for language changes
+   * Note: callback will never be triggered since observer is disabled
    */
   public onChange(callback: (currency: CurrencyCode) => void): void {
     this.onLanguageChangeCallbacks.push(callback);
-  }
-
-  /**
-   * Notify all callbacks of language change
-   */
-  private notifyChange(currency: CurrencyCode): void {
-    this.onLanguageChangeCallbacks.forEach((callback) => callback(currency));
   }
 
   /**
