@@ -5,9 +5,9 @@
  */
 
 import { BillingPeriodManager } from './billing-period';
+import { BlackFridayStylingManager } from './black-friday-styling';
 import { CurrencyManager } from './currency-manager';
 import { LanguageDetector } from './language-detector';
-import { PlaceholderClickManager } from './placeholder-clicks';
 import { PlaceholderClickManager } from './placeholder-clicks';
 import { PlanCalculator } from './plan-calculator';
 import { PricingDisplay } from './pricing-display';
@@ -25,6 +25,7 @@ class PricingSystem {
   private currencyManager: CurrencyManager | null = null;
   private languageDetector: LanguageDetector | null = null;
   private billingPeriodManager: BillingPeriodManager | null = null;
+  private blackFridayStyling: BlackFridayStylingManager | null = null;
   private userSelector: UserSelector | null = null;
   private sliderController: SliderController | null = null;
   private display: PricingDisplay | null = null;
@@ -54,11 +55,13 @@ class PricingSystem {
       this.currencyManager = new CurrencyManager();
       this.languageDetector = new LanguageDetector();
       this.billingPeriodManager = new BillingPeriodManager();
+      this.blackFridayStyling = new BlackFridayStylingManager();
       this.userSelector = new UserSelector();
       this.sliderController = new SliderController();
       this.placeholderManager = new PlaceholderClickManager();
       this.tooltipManager = new TooltipManager();
 
+      // Set initial state from managers
       // Set initial state from managers
       this.state.currency = this.languageDetector.detectCurrency();
       this.currencyManager.setCurrency(this.state.currency);
@@ -98,6 +101,8 @@ class PricingSystem {
     // Billing period changes
     this.billingPeriodManager?.onChange((period) => {
       this.state.billingPeriod = period;
+      // Notify Black Friday styling manager
+      this.blackFridayStyling?.onPeriodChange(period);
       // Wait for tab transition to complete before reinitializing slider
       setTimeout(() => {
         this.sliderController?.reinit();
@@ -170,6 +175,7 @@ class PricingSystem {
    */
   public destroy(): void {
     this.billingPeriodManager?.destroy();
+    this.blackFridayStyling?.destroy();
     this.sliderController?.destroy();
     this.placeholderManager?.destroy();
     this.languageDetector?.destroy();
@@ -178,6 +184,7 @@ class PricingSystem {
     this.currencyManager = null;
     this.languageDetector = null;
     this.billingPeriodManager = null;
+    this.blackFridayStyling = null;
     this.userSelector = null;
     this.sliderController = null;
     this.display = null;
