@@ -7,7 +7,7 @@ import type { BillingPeriod } from './types';
  */
 export class BlackFridayStylingManager {
   private highlightTabItem: HTMLElement | null = null;
-  private highlightTabCard: HTMLElement | null = null;
+  private highlightTabCards: NodeListOf<HTMLElement> | null = null;
   private highlightDiscount: HTMLElement | null = null;
   private badges: NodeListOf<HTMLElement> | null = null;
 
@@ -24,8 +24,9 @@ export class BlackFridayStylingManager {
     // Cache the highlight tab item element
     this.highlightTabItem = document.querySelector('.pricing_main_tab_item.is-highlight');
 
-    // Cache the highlight tab card element
-    this.highlightTabCard = document.querySelector('.pricing_main_tab_card.is-highlight');
+    // Cache ALL highlight tab card elements (there might be multiple - one per tab)
+    // We'll handle all of them instead of just the first one
+    this.highlightTabCards = document.querySelectorAll('.pricing_main_tab_card.is-highlight');
 
     // Cache the highlight discount element
     this.highlightDiscount = document.querySelector('.pricing_main_highlight_discount');
@@ -64,9 +65,13 @@ export class BlackFridayStylingManager {
       this.highlightTabItem.classList.add('is-bw');
     }
 
-    // Restore is-bw class on highlight tab card
-    if (this.highlightTabCard && !this.highlightTabCard.classList.contains('is-bw')) {
-      this.highlightTabCard.classList.add('is-bw');
+    // Restore is-bw class on ALL highlight tab cards
+    if (this.highlightTabCards) {
+      this.highlightTabCards.forEach((card) => {
+        if (!card.classList.contains('is-bw')) {
+          card.classList.add('is-bw');
+        }
+      });
     }
 
     // Restore is-bw class on highlight discount
@@ -91,9 +96,13 @@ export class BlackFridayStylingManager {
       this.highlightTabItem.classList.remove('is-bw');
     }
 
-    // Remove is-bw class from highlight tab card
-    if (this.highlightTabCard && this.highlightTabCard.classList.contains('is-bw')) {
-      this.highlightTabCard.classList.remove('is-bw');
+    // Remove is-bw class from ALL highlight tab cards
+    if (this.highlightTabCards) {
+      this.highlightTabCards.forEach((card) => {
+        if (card.classList.contains('is-bw')) {
+          card.classList.remove('is-bw');
+        }
+      });
     }
 
     // Remove is-bw class from highlight discount
@@ -114,7 +123,7 @@ export class BlackFridayStylingManager {
    */
   public destroy(): void {
     this.highlightTabItem = null;
-    this.highlightTabCard = null;
+    this.highlightTabCards = null;
     this.highlightDiscount = null;
     this.badges = null;
   }
