@@ -83,10 +83,18 @@ export class BlackFridayStylingManager {
       this.highlightDiscount.classList.add('is-bw');
     }
 
-    // Restore visibility on badges
+    // Restore is-bw class and original text on badges
     if (this.badges) {
       this.badges.forEach((badge) => {
-        badge.style.visibility = 'visible';
+        // Restore is-bw class
+        if (!badge.classList.contains('is-bw')) {
+          badge.classList.add('is-bw');
+        }
+        // Restore original Black Friday text
+        const innerDiv = badge.querySelector('div');
+        if (innerDiv) {
+          innerDiv.innerHTML = 'BlackFriday<br><strong>Code : BF50</strong><br>';
+        }
       });
     }
   }
@@ -118,10 +126,22 @@ export class BlackFridayStylingManager {
       this.highlightDiscount.classList.remove('is-bw');
     }
 
-    // Hide badges
+    // Update badges: remove is-bw class and change text based on language
     if (this.badges) {
+      // Detect language from URL
+      const isFrench = window.location.pathname.includes('/fr/');
+      const badgeText = isFrench ? 'Le plus populaire' : 'Most Popular';
+
       this.badges.forEach((badge) => {
-        badge.style.visibility = 'hidden';
+        // Remove is-bw class
+        if (badge.classList.contains('is-bw')) {
+          badge.classList.remove('is-bw');
+        }
+        // Change text content
+        const innerDiv = badge.querySelector('div');
+        if (innerDiv) {
+          innerDiv.innerHTML = badgeText;
+        }
       });
     }
   }
