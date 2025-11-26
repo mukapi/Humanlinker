@@ -41,12 +41,18 @@ export class BlackFridayStylingManager {
   public onPeriodChange(period: BillingPeriod): void {
     if (!BLACK_FRIDAY_ENABLED) return;
 
-    if (period === 'annual') {
-      this.restoreAnnualStyles();
-    } else {
-      // monthly or quarterly
-      this.applyNonAnnualStyles();
-    }
+    // Re-query elements to ensure we have the latest DOM state
+    // This is important because Webflow tabs may recreate/move elements
+    setTimeout(() => {
+      this.init();
+
+      if (period === 'annual') {
+        this.restoreAnnualStyles();
+      } else {
+        // monthly or quarterly
+        this.applyNonAnnualStyles();
+      }
+    }, 50);
   }
 
   /**
