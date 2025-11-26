@@ -6,7 +6,9 @@ import type { BillingPeriod } from './types';
  * Only active when BLACK_FRIDAY_ENABLED is true
  */
 export class BlackFridayStylingManager {
-  private highlightTab: HTMLElement | null = null;
+  private highlightTabItem: HTMLElement | null = null;
+  private highlightTabCard: HTMLElement | null = null;
+  private highlightDiscount: HTMLElement | null = null;
   private badges: NodeListOf<HTMLElement> | null = null;
 
   constructor() {
@@ -19,8 +21,14 @@ export class BlackFridayStylingManager {
    * Initialize and cache DOM elements
    */
   private init(): void {
-    // Cache the highlight tab element
-    this.highlightTab = document.querySelector('.pricing_main_tab_item.is-highlight');
+    // Cache the highlight tab item element
+    this.highlightTabItem = document.querySelector('.pricing_main_tab_item.is-highlight');
+
+    // Cache the highlight tab card element
+    this.highlightTabCard = document.querySelector('.pricing_main_tab_card.is-highlight');
+
+    // Cache the highlight discount element
+    this.highlightDiscount = document.querySelector('.pricing_main_highlight_discount');
 
     // Cache all badge elements
     this.badges = document.querySelectorAll('.pricing_main_badge');
@@ -45,9 +53,19 @@ export class BlackFridayStylingManager {
    * Restore styles when annual tab is selected
    */
   private restoreAnnualStyles(): void {
-    // Restore is-bw class on highlight tab
-    if (this.highlightTab && !this.highlightTab.classList.contains('is-bw')) {
-      this.highlightTab.classList.add('is-bw');
+    // Restore is-bw class on highlight tab item
+    if (this.highlightTabItem && !this.highlightTabItem.classList.contains('is-bw')) {
+      this.highlightTabItem.classList.add('is-bw');
+    }
+
+    // Restore is-bw class on highlight tab card
+    if (this.highlightTabCard && !this.highlightTabCard.classList.contains('is-bw')) {
+      this.highlightTabCard.classList.add('is-bw');
+    }
+
+    // Restore is-bw class on highlight discount
+    if (this.highlightDiscount && !this.highlightDiscount.classList.contains('is-bw')) {
+      this.highlightDiscount.classList.add('is-bw');
     }
 
     // Restore visibility on badges
@@ -62,9 +80,19 @@ export class BlackFridayStylingManager {
    * Apply styles when monthly or quarterly tab is selected
    */
   private applyNonAnnualStyles(): void {
-    // Remove is-bw class from highlight tab
-    if (this.highlightTab && this.highlightTab.classList.contains('is-bw')) {
-      this.highlightTab.classList.remove('is-bw');
+    // Remove is-bw class from highlight tab item
+    if (this.highlightTabItem && this.highlightTabItem.classList.contains('is-bw')) {
+      this.highlightTabItem.classList.remove('is-bw');
+    }
+
+    // Remove is-bw class from highlight tab card
+    if (this.highlightTabCard && this.highlightTabCard.classList.contains('is-bw')) {
+      this.highlightTabCard.classList.remove('is-bw');
+    }
+
+    // Remove is-bw class from highlight discount
+    if (this.highlightDiscount && this.highlightDiscount.classList.contains('is-bw')) {
+      this.highlightDiscount.classList.remove('is-bw');
     }
 
     // Hide badges
@@ -79,7 +107,9 @@ export class BlackFridayStylingManager {
    * Cleanup
    */
   public destroy(): void {
-    this.highlightTab = null;
+    this.highlightTabItem = null;
+    this.highlightTabCard = null;
+    this.highlightDiscount = null;
     this.badges = null;
   }
 }
