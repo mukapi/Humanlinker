@@ -87,6 +87,7 @@ export const BILLING_DISCOUNTS: BillingDiscount = {
  *
  * NORMAL PRICES (calculated with 20% annual discount):
  * - Pro 1: €55.2 / $59.6 / £46.9 per month
+ * - Pro 1: €55.2 / $59.6 / £46.9 per month
  * - Pro 2: €79.2 / $85.5 / £67.3 per month
  * - Pro 3: €119.2 / $128.7 / £101.3 per month
  * ============================================================
