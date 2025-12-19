@@ -38,6 +38,24 @@
       dropdownOpen: 'w--open',
       dropdownActive: 'is-active',
     },
+
+    // Textes selon la langue
+    texts: {
+      en: {
+        billedAnnually: 'billed annually (excl. VAT)',
+        creditsPerYear: 'AI credits per year',
+        perMonthFor: '/ month for',
+        user: 'user',
+        users: 'users',
+      },
+      fr: {
+        billedAnnually: 'facturé annuellement (HT)',
+        creditsPerYear: 'crédits IA par an',
+        perMonthFor: '/ mois pour',
+        user: 'utilisateur',
+        users: 'utilisateurs',
+      },
+    },
   };
 
   // ===========================================
@@ -48,7 +66,29 @@
     plan: 1, // 1, 2, ou 3
     users: 1, // 1 à 5
     currency: 'EUR',
+    lang: 'en', // 'en' ou 'fr'
   };
+
+  // ===========================================
+  // LANGUAGE DETECTION
+  // ===========================================
+
+  function detectLanguage() {
+    // Vérifier l'URL pour /fr/
+    if (window.location.pathname.includes('/fr/')) {
+      return 'fr';
+    }
+    // Vérifier l'attribut lang du HTML
+    const htmlLang = document.documentElement.getAttribute('lang');
+    if (htmlLang && htmlLang.toLowerCase().startsWith('fr')) {
+      return 'fr';
+    }
+    return 'en';
+  }
+
+  function getTexts() {
+    return CONFIG.texts[state.lang] || CONFIG.texts.en;
+  }
 
   // ===========================================
   // SELECTORS
@@ -58,6 +98,7 @@
     // Éléments à mettre à jour
     priceMonthly: '[data-price-monthly]',
     priceAnnual: '[data-price-annual]',
+    pricePerMonth: '[data-price-per-month]', // "/ month for X users"
     userCount: '[data-user-count]',
     creditsTotal: '[data-credits-total]',
     currencySelector: '[data-currency-selector]',
@@ -79,6 +120,7 @@
     elements = {
       priceMonthly: document.querySelector(SELECTORS.priceMonthly),
       priceAnnual: document.querySelector(SELECTORS.priceAnnual),
+      pricePerMonth: document.querySelector(SELECTORS.pricePerMonth),
       userCount: document.querySelector(SELECTORS.userCount),
       creditsTotal: document.querySelector(SELECTORS.creditsTotal),
       currencySelector: document.querySelector(SELECTORS.currencySelector),
@@ -126,6 +168,7 @@
 
   function updateDisplay() {
     const pricing = calculatePricing();
+    const texts = getTexts();
 
     // Prix mensuel
     if (elements.priceMonthly) {
@@ -136,23 +179,30 @@
       );
     }
 
+    // Texte "/ mois pour X utilisateur(s)"
+    if (elements.pricePerMonth) {
+      const userWord = state.users === 1 ? texts.user : texts.users;
+      elements.pricePerMonth.textContent = `${texts.perMonthFor} ${state.users} ${userWord}`;
+    }
+
     // Prix annuel
     if (elements.priceAnnual) {
       const symbol = pricing.currencyPosition === 'before' ? pricing.currencySymbol : '';
       const suffix = pricing.currencyPosition === 'after' ? pricing.currencySymbol : '';
 
-      elements.priceAnnual.textContent = `${symbol}${pricing.annualPrice}${suffix} billed annually (excl. VAT)`;
+      elements.priceAnnual.textContent = `${symbol}${pricing.annualPrice}${suffix} ${texts.billedAnnually}`;
     }
 
     // Crédits IA (valeur fixe selon le plan)
     if (elements.creditsTotal) {
-      elements.creditsTotal.textContent = `${pricing.credits} AI credits per year`;
+      elements.creditsTotal.textContent = `${pricing.credits} ${texts.creditsPerYear}`;
     }
 
     console.log('📊 Pricing updated:', {
       plan: state.plan,
       users: state.users,
       currency: state.currency,
+      lang: state.lang,
       monthlyPrice: pricing.monthlyPrice,
       annualPrice: pricing.annualPrice,
       credits: pricing.credits,
@@ -213,23 +263,13 @@
 
   /**
    * Ferme le dropdown Webflow proprement
-   * Webflow utilise la classe w--open pour gérer l'état ouvert/fermé
+   * Simule un clic sur le body pour déclencher la fermeture native de Webflow
    */
-  function closeDropdown(item) {
-    const dropdown = item.closest(`.${CONFIG.cssClasses.dropdown}`);
-    if (!dropdown) return;
-
-    const toggle = dropdown.querySelector(`.${CONFIG.cssClasses.dropdownToggle}`);
-    const list = dropdown.querySelector(`.${CONFIG.cssClasses.dropdownList}`);
-
-    // Retirer les classes w--open directement
-    if (toggle) {
-      toggle.classList.remove(CONFIG.cssClasses.dropdownOpen);
-      toggle.setAttribute('aria-expanded', 'false');
-    }
-    if (list) {
-      list.classList.remove(CONFIG.cssClasses.dropdownOpen);
-    }
+  function closeDropdown() {
+    // Petit délai pour éviter les conflits avec le clic en cours
+    setTimeout(() => {
+      document.body.click();
+    }, 10);
   }
 
   /**
@@ -276,13 +316,9 @@
           // Mettre à jour l'UI du dropdown
           updateDropdownActiveState(item);
           updateDropdownLabel(item);
-          closeDropdown(item);
+          closeDropdown();
 
-          // Mettre à jour l'affichage du nombre d'users (data-user-count)
-          if (elements.userCount) {
-            elements.userCount.textContent = userValue === 1 ? '1 user' : `${userValue} users`;
-          }
-
+          // Mettre à jour l'affichage (prix, crédits, texte utilisateurs)
           updateDisplay();
         }
       });
@@ -379,6 +415,10 @@
 
   function init() {
     console.log('🚀 Initializing Humanlinker Pricing...');
+
+    // Détecter la langue
+    state.lang = detectLanguage();
+    console.log('🌐 Language detected:', state.lang);
 
     // Cache les éléments DOM
     cacheElements();
