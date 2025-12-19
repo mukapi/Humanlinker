@@ -18,9 +18,33 @@
   const CONFIG = {
     // Prix par plan (EUR, par mois, par utilisateur)
     plans: {
-      1: { name: 'Pro 1', price: 69, credits: 200 },
-      2: { name: 'Pro 2', price: 99, credits: 350 },
-      3: { name: 'Pro 3', price: 149, credits: 600 },
+      1: {
+        name: 'Pro 1',
+        price: 69,
+        credits: 200,
+        recommendations: 800,
+        enrichments: 200,
+        emailBoxes: 2,
+        linkedinAccounts: 1,
+      },
+      2: {
+        name: 'Pro 2',
+        price: 99,
+        credits: 350,
+        recommendations: 1400,
+        enrichments: 350,
+        emailBoxes: 3,
+        linkedinAccounts: 1,
+      },
+      3: {
+        name: 'Pro 3',
+        price: 149,
+        credits: 600,
+        recommendations: 2400,
+        enrichments: 600,
+        emailBoxes: 4,
+        linkedinAccounts: 1,
+      },
     },
 
     // Taux de change depuis EUR
@@ -103,6 +127,13 @@
     creditsTotal: '[data-credits-total]',
     currencySelector: '[data-currency-selector]',
 
+    // Features du plan (valeurs qui changent selon Pro 1/2/3)
+    recommendationsText: '[data-recommendations-text]',
+    creditsIaText: '[data-credits-ia-text]',
+    enrichissementsText: '[data-enrichissements-text]',
+    boitesEmailText: '[data-boites-email-text]',
+    comptesLinkedinText: '[data-comptes-linkedin-text]',
+
     // Slider Finsweet
     sliderHandle: '[fs-rangeslider-element="handle"]',
 
@@ -126,6 +157,12 @@
       currencySelector: document.querySelector(SELECTORS.currencySelector),
       sliderHandle: document.querySelector(SELECTORS.sliderHandle),
       userDropdownItems: document.querySelectorAll(SELECTORS.userDropdownItems),
+      // Features du plan
+      recommendationsText: document.querySelector(SELECTORS.recommendationsText),
+      creditsIaText: document.querySelector(SELECTORS.creditsIaText),
+      enrichissementsText: document.querySelector(SELECTORS.enrichissementsText),
+      boitesEmailText: document.querySelector(SELECTORS.boitesEmailText),
+      comptesLinkedinText: document.querySelector(SELECTORS.comptesLinkedinText),
     };
   }
 
@@ -196,6 +233,29 @@
     // Crédits IA (valeur fixe selon le plan)
     if (elements.creditsTotal) {
       elements.creditsTotal.textContent = `${pricing.credits} ${texts.creditsPerYear}`;
+    }
+
+    // Features du plan (recommandations, crédits IA, enrichissements, etc.)
+    const plan = CONFIG.plans[state.plan];
+
+    if (elements.recommendationsText) {
+      elements.recommendationsText.textContent = plan.recommendations;
+    }
+
+    if (elements.creditsIaText) {
+      elements.creditsIaText.textContent = plan.credits;
+    }
+
+    if (elements.enrichissementsText) {
+      elements.enrichissementsText.textContent = plan.enrichments;
+    }
+
+    if (elements.boitesEmailText) {
+      elements.boitesEmailText.textContent = plan.emailBoxes;
+    }
+
+    if (elements.comptesLinkedinText) {
+      elements.comptesLinkedinText.textContent = plan.linkedinAccounts;
     }
 
     console.log('📊 Pricing updated:', {
