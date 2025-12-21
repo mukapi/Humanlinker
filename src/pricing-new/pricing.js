@@ -67,14 +67,14 @@
     texts: {
       en: {
         billedAnnually: 'billed annually (excl. VAT)',
-        creditsPerYear: 'AI credits per year',
+        creditsPerMonth: 'AI credits per month',
         perMonthFor: '/ month for',
         user: 'user',
         users: 'users',
       },
       fr: {
         billedAnnually: 'facturé annuellement (HT)',
-        creditsPerYear: 'crédits IA par an',
+        creditsPerMonth: 'crédits IA par mois',
         perMonthFor: '/ mois pour',
         user: 'utilisateur',
         users: 'utilisateurs',
@@ -232,30 +232,31 @@
 
     // Crédits IA (valeur fixe selon le plan)
     if (elements.creditsTotal) {
-      elements.creditsTotal.textContent = `${pricing.credits} ${texts.creditsPerYear}`;
+      elements.creditsTotal.textContent = `${pricing.credits} ${texts.creditsPerMonth}`;
     }
 
     // Features du plan (recommandations, crédits IA, enrichissements, etc.)
+    // Multipliées par le nombre d'utilisateurs
     const plan = CONFIG.plans[state.plan];
 
     if (elements.recommendationsText) {
-      elements.recommendationsText.textContent = plan.recommendations;
+      elements.recommendationsText.textContent = plan.recommendations * state.users;
     }
 
     if (elements.creditsIaText) {
-      elements.creditsIaText.textContent = plan.credits;
+      elements.creditsIaText.textContent = plan.credits * state.users;
     }
 
     if (elements.enrichissementsText) {
-      elements.enrichissementsText.textContent = plan.enrichments;
+      elements.enrichissementsText.textContent = plan.enrichments * state.users;
     }
 
     if (elements.boitesEmailText) {
-      elements.boitesEmailText.textContent = plan.emailBoxes;
+      elements.boitesEmailText.textContent = plan.emailBoxes * state.users;
     }
 
     if (elements.comptesLinkedinText) {
-      elements.comptesLinkedinText.textContent = plan.linkedinAccounts;
+      elements.comptesLinkedinText.textContent = plan.linkedinAccounts * state.users;
     }
 
     console.log('📊 Pricing updated:', {
@@ -323,13 +324,26 @@
 
   /**
    * Ferme le dropdown Webflow proprement
-   * Simule un clic sur le body pour déclencher la fermeture native de Webflow
+   * Retire manuellement les classes w--open de Webflow
    */
-  function closeDropdown() {
-    // Petit délai pour éviter les conflits avec le clic en cours
+  function closeDropdown(item) {
+    const dropdown = item.closest(`.${CONFIG.cssClasses.dropdown}`);
+    if (!dropdown) return;
+
+    // Petit délai pour laisser le clic terminer
     setTimeout(() => {
-      document.body.click();
-    }, 10);
+      // Trouver et fermer la liste
+      const dropdownList = dropdown.querySelector(`.${CONFIG.cssClasses.dropdownList}`);
+      const dropdownToggle = dropdown.querySelector(`.${CONFIG.cssClasses.dropdownToggle}`);
+
+      if (dropdownList) {
+        dropdownList.classList.remove(CONFIG.cssClasses.dropdownOpen);
+      }
+      if (dropdownToggle) {
+        dropdownToggle.classList.remove(CONFIG.cssClasses.dropdownOpen);
+        dropdownToggle.setAttribute('aria-expanded', 'false');
+      }
+    }, 50);
   }
 
   /**
@@ -376,7 +390,7 @@
           // Mettre à jour l'UI du dropdown
           updateDropdownActiveState(item);
           updateDropdownLabel(item);
-          closeDropdown();
+          closeDropdown(item);
 
           // Mettre à jour l'affichage (prix, crédits, texte utilisateurs)
           updateDisplay();
@@ -470,6 +484,71 @@
   }
 
   // ===========================================
+  // TOOLTIPS (Tippy.js + Lottie)
+  // ===========================================
+
+  function initTooltips() {
+    // Vérifier que Tippy est chargé
+    if (typeof window.tippy === 'undefined') {
+      console.warn('⚠️ Tippy.js not loaded. Tooltips will not work.');
+      return;
+    }
+
+    // Initialiser les tooltips texte
+    window.tippy('[data-tippy-content]', {
+      allowHTML: true,
+      theme: 'light',
+      placement: 'top',
+      interactive: true,
+      delay: [100, 50],
+    });
+
+    // Initialiser les tooltips Lottie
+    if (typeof window.lottie !== 'undefined') {
+      window.tippy('[data-lottie]', {
+        allowHTML: true,
+        interactive: true,
+        theme: 'light',
+        placement: 'top',
+        maxWidth: 280,
+        content: function () {
+          var containerId = 'lottie-' + Date.now() + Math.random().toString(36).substr(2, 5);
+          return '<div id="' + containerId + '" style="width:260px;height:200px;"></div>';
+        },
+        onShow: function (instance) {
+          // Éviter la duplication si déjà chargé
+          if (instance._lottieAnimation) return;
+
+          var reference = instance.reference;
+          var jsonUrl = reference.getAttribute('data-lottie');
+          var container = instance.popper.querySelector('[id^="lottie-"]');
+
+          if (!container || !jsonUrl) return;
+
+          instance._lottieAnimation = window.lottie.loadAnimation({
+            container: container,
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: jsonUrl,
+          });
+        },
+        onHide: function (instance) {
+          // Nettoyer l'animation quand le tooltip se ferme
+          if (instance._lottieAnimation) {
+            instance._lottieAnimation.destroy();
+            instance._lottieAnimation = null;
+          }
+        },
+      });
+    } else {
+      console.warn('⚠️ Lottie not loaded. Lottie tooltips will not work.');
+    }
+
+    console.log('✅ Tooltips initialized');
+  }
+
+  // ===========================================
   // INITIALIZATION
   // ===========================================
 
@@ -496,6 +575,9 @@
     setupSliderObserver();
     setupUserDropdownListeners();
     setupPlaceholderClicks();
+
+    // Initialiser les tooltips
+    initTooltips();
 
     // Affichage initial
     updateDisplay();
