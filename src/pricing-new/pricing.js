@@ -71,6 +71,7 @@
         perMonthFor: '/ month for',
         user: 'user',
         users: 'users',
+        creditsTooltip: 'to engage {credits} contacts per month with ultra-personalized outreach',
       },
       fr: {
         billedAnnually: 'facturé annuellement (HT)',
@@ -78,6 +79,7 @@
         perMonthFor: '/ mois pour',
         user: 'utilisateur',
         users: 'utilisateurs',
+        creditsTooltip: 'pour engager {credits} contacts par mois avec une approche ultra-personnalisée',
       },
     },
   };
@@ -134,6 +136,9 @@
     boitesEmailText: '[data-boites-email-text]',
     comptesLinkedinText: '[data-comptes-linkedin-text]',
 
+    // Tooltip crédits IA (dynamique selon le plan)
+    creditsTooltip: '[data-tooltip-id="credits-ia"]',
+
     // Slider Finsweet
     sliderHandle: '[fs-rangeslider-element="handle"]',
 
@@ -163,6 +168,8 @@
       enrichissementsText: document.querySelector(SELECTORS.enrichissementsText),
       boitesEmailText: document.querySelector(SELECTORS.boitesEmailText),
       comptesLinkedinText: document.querySelector(SELECTORS.comptesLinkedinText),
+      // Tooltip crédits IA
+      creditsTooltip: document.querySelector(SELECTORS.creditsTooltip),
     };
   }
 
@@ -257,6 +264,18 @@
 
     if (elements.comptesLinkedinText) {
       elements.comptesLinkedinText.textContent = plan.linkedinAccounts * state.users;
+    }
+
+    // Tooltip crédits IA dynamique (selon le plan × nombre d'users)
+    if (elements.creditsTooltip) {
+      const totalCredits = plan.credits * state.users;
+      const tooltipText = texts.creditsTooltip.replace('{credits}', totalCredits);
+      elements.creditsTooltip.setAttribute('data-tippy-content', tooltipText);
+
+      // Mettre à jour l'instance Tippy si elle existe
+      if (elements.creditsTooltip._tippy) {
+        elements.creditsTooltip._tippy.setContent(tooltipText);
+      }
     }
 
     console.log('📊 Pricing updated:', {
